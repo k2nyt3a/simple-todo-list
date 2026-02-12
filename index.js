@@ -112,20 +112,20 @@ app.delete('/api/todos/:id', (req, res) => {
 
 app.put('/api/todos/:id', (req, res) => {
     const { id } = req.params;
-    const { text } = req.body; // Step 4: Extract text for editing
+    const { text } = req.body; // Step 4: Capture the new text from the request body 
     let todos = readTodos();
     const index = todos.findIndex(t => t.id === parseInt(id));
 
     if (index !== -1) {
-        // If 'text' is provided in the body, it's an EDIT request
+        // Check if this is an EDIT request (text is provided) 
         if (text !== undefined) {
-            // Validation: Check if text is empty or just whitespace
+            // Validation: Ensure text isn't empty or just whitespace 
             if (!text || text.trim() === '') {
                 return res.status(400).json({ error: 'Todo text is required' });
             }
-            todos[index].text = text.trim();
+            todos[index].text = text.trim(); // Update the text 
         } else {
-            // If no 'text' is provided, it's the original TOGGLE request
+            // Otherwise, perform the original TOGGLE completion status [cite: 1, 23]
             todos[index].completed = !todos[index].completed;
         }
 
