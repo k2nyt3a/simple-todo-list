@@ -251,31 +251,5 @@ describe('Todo API Endpoints', () => {
       expect(response.body[2].text).toBe('Todo 3');
     });
   });
-
-  describe('PUT /api/todos/:id (Edit Feature)', () => {
-    test('should successfully edit todo text', async () => {
-        // Create a todo
-        const createRes = await request(app).post('/api/todos').send({ text: 'Original' });
-        const id = createRes.body.id;
-
-        // Edit the todo
-        const editRes = await request(app)
-            .put(`/api/todos/${id}`)
-            .send({ text: 'Updated' });
-
-        expect(editRes.status).toBe(200);
-        expect(editRes.body.text).toBe('Updated');
-    });
-
-    test('should return 400 for empty edit text', async () => {
-        const createRes = await request(app).post('/api/todos').send({ text: 'Valid' });
-        const id = createRes.body.id;
-
-        const editRes = await request(app)
-            .put(`/api/todos/${id}`)
-            .send({ text: '' });
-
-        expect(editRes.status).toBe(400);
-    });
-});
+  
 });

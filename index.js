@@ -110,37 +110,6 @@ app.delete('/api/todos/:id', (req, res) => {
   }
 });
 
-app.put('/api/todos/:id', (req, res) => {
-  const { id } = req.params;
-  const { text } = req.body;
-  let todos = readTodos();
-  const index = todos.findIndex(t => t.id === parseInt(id));
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Todo not found' });
-  }
-
-  // EDIT mode
-  if (text !== undefined) {
-    if (!text || text.trim() === '') {
-      return res.status(400).json({ error: 'Todo text is required' });
-    }
-
-    todos[index].text = text.trim();
-  } 
-  // TOGGLE mode
-  else {
-    todos[index].completed = !todos[index].completed;
-  }
-
-  if (writeTodos(todos)) {
-    return res.json(todos[index]);
-  } else {
-    return res.status(500).json({ error: 'Failed to update todo' });
-  }
-});
-
-
 // Initialize todos file on startup
 initTodosFile();
 
