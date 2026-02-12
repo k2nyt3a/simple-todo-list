@@ -138,8 +138,24 @@ h1 {
 }
 
 .delete-btn:hover {
-    background: #ff3838;
+    background: #b91313;
 }
+
+.edit-btn {
+    background: #a0a0a0;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.edit-btn:hover {
+    background: #6b6b6b;
+}
+
 
 .stats {
     display: flex;
