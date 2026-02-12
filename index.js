@@ -110,6 +110,22 @@ app.delete('/api/todos/:id', (req, res) => {
   }
 });
 
+// Route to edit an existing todo item
+app.put('/api/todos/:id/edit', (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+    let todos = readTodos();
+    const index = todos.findIndex(t => t.id === parseInt(id));
+    
+    if (index !== -1) {
+        todos[index].text = text;
+        writeTodos(todos);
+        res.json(todos[index]);
+    } else {
+        res.status(404).json({ message: "Todo not found" });
+    }
+});
+
 // Initialize todos file on startup
 initTodosFile();
 
