@@ -110,19 +110,29 @@ app.delete('/api/todos/:id', (req, res) => {
   }
 });
 
-// Route to edit an existing todo item
-app.put('/api/todos/:id/edit', (req, res) => {
+app.put('/api/todos/:id', (req, res) => {
     const { id } = req.params;
-    const { text } = req.body;
+    const { text } = req.body; // Step 4: Extract text for editing
     let todos = readTodos();
     const index = todos.findIndex(t => t.id === parseInt(id));
-    
+
     if (index !== -1) {
-        todos[index].text = text;
+        // If 'text' is provided in the body, it's an EDIT request
+        if (text !== undefined) {
+            // Validation: Check if text is empty or just whitespace
+            if (!text || text.trim() === '') {
+                return res.status(400).json({ error: 'Todo text is required' });
+            }
+            todos[index].text = text.trim();
+        } else {
+            // If no 'text' is provided, it's the original TOGGLE request
+            todos[index].completed = !todos[index].completed;
+        }
+
         writeTodos(todos);
         res.json(todos[index]);
     } else {
-        res.status(404).json({ message: "Todo not found" });
+        res.status(404).json({ error: 'Todo not found' });
     }
 });
 
