@@ -6,6 +6,9 @@ const app = require('../index');
 // Mock file path for testing
 const TEST_TODOS_FILE = path.join(__dirname, '../todos.test.json');
 
+// Increase timeout to handle file system delay
+jest.setTimeout(10000);
+
 describe('Todo API Endpoints', () => {
   beforeEach(() => {
     // Reset the todos file before each test
