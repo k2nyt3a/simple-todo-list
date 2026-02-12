@@ -230,7 +230,7 @@ describe('Todo API Endpoints', () => {
       expect(response.body.text).toBe('Updated text');
       expect(response.body.completed).toBe(true);
     });
-
+  });
 
   describe('DELETE /api/todos/:id', () => {
     test('should delete a todo', async () => {
