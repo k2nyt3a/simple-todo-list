@@ -157,7 +157,80 @@ describe('Todo API Endpoints', () => {
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error', 'Todo not found');
     });
-  });
+
+    test('should edit the todo text when text is provided', async () => {
+      // Create a todo first
+      const createResponse = await request(app)
+        .post('/api/todos')
+        .send({ text: 'Original text' });
+      
+      const todoId = createResponse.body.id;
+      
+      // Edit the todo text
+      const response = await request(app)
+        .put(`/api/todos/${todoId}`)
+        .send({ text: 'Updated text' });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.text).toBe('Updated text');
+      expect(response.body.completed).toBe(false);
+    });
+
+    test('should trim whitespace when editing todo text', async () => {
+      // Create a todo
+      const createResponse = await request(app)
+        .post('/api/todos')
+        .send({ text: 'Original' });
+      
+      const todoId = createResponse.body.id;
+      
+      // Edit with whitespace
+      const response = await request(app)
+        .put(`/api/todos/${todoId}`)
+        .send({ text: '  Trimmed text  ' });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.text).toBe('Trimmed text');
+    });
+
+    test('should return 400 if editing with empty text', async () => {
+      // Create a todo
+      const createResponse = await request(app)
+        .post('/api/todos')
+        .send({ text: 'Original' });
+      
+      const todoId = createResponse.body.id;
+      
+      // Try to edit with empty text
+      const response = await request(app)
+        .put(`/api/todos/${todoId}`)
+        .send({ text: '' });
+      
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error', 'Todo text cannot be empty');
+    });
+
+    test('should preserve completion status when editing text', async () => {
+      // Create and complete a todo
+      const createResponse = await request(app)
+        .post('/api/todos')
+        .send({ text: 'Original' });
+      
+      const todoId = createResponse.body.id;
+      
+      // Toggle to completed
+      await request(app).put(`/api/todos/${todoId}`);
+      
+      // Edit the text
+      const response = await request(app)
+        .put(`/api/todos/${todoId}`)
+        .send({ text: 'Updated text' });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.text).toBe('Updated text');
+      expect(response.body.completed).toBe(true);
+    });
+
 
   describe('DELETE /api/todos/:id', () => {
     test('should delete a todo', async () => {
